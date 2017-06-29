@@ -1,2 +1,2 @@
 # golos-bot
-Small web socket based application for making vote on GOLOS.IO platform
+Small web socket based application for making vote specific on https://golos.io/ platform
