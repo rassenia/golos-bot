@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+  <link rel="stylesheet" type="text/css" href="css/css.css">
+  <script type="text/javascript" src="js/golos.js"></script>
+  <script type="text/javascript" src="js/config.js"></script>
+  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="js/parsley.min.js"></script>
+  <script type="text/javascript" src="js/jquery.tmpl.js"></script>
+  <title>Upvote Bot</title>
+</head>
+<body>
+<div class="app">
+  <header class="b-header">
+    <div class="b-header__item">
+      <div class="b-header__logo"></div>
+    </div>
+    <div class="b-header__item b-header__item--overlay">
+      <div class="b-header__title">БотАПвоT</div>
+    </div>
+    <div class="b-header__item">
+      <div class="b-header__btn b-header__menu"></div>
+    </div>
+    <nav class="b-config">
+      <div class="b-config__control">
+        <button class="b-add b-header__btn b-header__plus" title="Добавить форму для нового пользователя."></button>
+      </div>
+      <div class="b-config__body"></div>
+    </nav>
+  </header>
+  <div id="tabs" class="b-tabs">
+    <ul class="b-tabs__list"></ul>
+  </div>
+
+</div>
+<!-- templates -->
+
+<script id="tabs-body-item" type="text/x-jquery-tmpl">
+  <div id="${configUser}" class="b-tabs__body">
+      <div id="massage-${index}" class="b-message" data-index="${index}">Внимание! Вы изменили предыдущие настройки бота для пользователя ${configUser}. Для того, чтобы они вступили в силу. Вам надо остановить бота и запустить его заново.</div>
+      <div class="b-line">
+        <div class="b-block b-block__twice">
+          <div class="b-info">
+            <label class="b-label">Бот: <div class="b-header__btn b-header__play" data-index="${index}" title="Запустить бота для пользователя ${configUser}"></div><div class="b-header__btn b-header__pause" data-index="${index}" title="Остановить бота для пользователя ${configUser}"></div></label>
+             <div class="b-statistic">
+                <div class="b-statistic__item">
+                  <label id="progress-label-${index}" class="b-statistic__label">Остановлен...</label>
+                </div>
+                <div id="progress-${index}" type="text" class="b-content b-content--no_p_m">
+                  <div id="progress-bar-${index}" class="b-progress-bar"></div>
+                </div>
+                <hr class="b-divider" />
+                <div class="b-statistic__item">
+                  <label class="b-statistic__label">Общее кол-во операций:</label>
+                  <div id="total-${index}" class="b-statistic__text" title="Общее количество всех операций, произошедших на Голосе за текущее время"></div>
+                </div>
+                <div class="b-statistic__item">
+                  <label class="b-statistic__label">Кол-во апвотов:</label>
+                  <div id="votes-${index}" class="b-statistic__text" title="Общее количество аповтов, совершенных пользователем ${configUser}"></div>
+                </div>
+                <div class="b-statistic__item">
+                  <label class="b-statistic__label">Кол-во дублирующих апвотов:</label>
+                  <div id="unvotes-${index}" class="b-statistic__text" title="Количество апвотов, выполненное кураторами за статью и проигнорированное пользователем ${configUser}, так как ранее этот пользователь уже голосовал за данную статью"></div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="b-block b-block__twice">
+          <div class="b-info">
+            <label class="b-label">Пользователь: <div id="user-status-icon-${index}" class="b-user-status-icon"></div></label>
+            <div class="b-statistic">
+              <div class="b-statistic__item">
+                <label class="b-statistic__label">Сила для голосования:</label>
+                <div id="v-power-${index}" class="b-statistic__text" title="Не путать с 'Силой Голоса'! Это ограниченный параметр позволяющий голосовать в принципе. Если он упадет до нуля, то вы больше не сможете отдавать свой голос за статьи. С течением времени этот параметр восстанавливается."></div>
+              </div>
+              <div class="b-statistic__item">
+                <label class="b-statistic__label">Голос:</label>
+                <div id="user-golos-${index}" class="b-statistic__text" title="Перемещаемые цифровые токены, которые могут быть переданы куда угодно в любой момент.
+Голос может быть конвертирован в Силу Голоса, этот процесс называется 'увеличение Силы Голоса'."></div>
+              </div>
+              <hr class="b-divider" />
+              <div class="b-statistic__item">
+                <label class="b-statistic__label">Кол-во подписичиков:</label>
+                <div id="user-gests-status-${index}" class="b-statistic__text" title="Количество человек подписанных на блог пользователя ${configUser}"></div>
+              </div>
+              <div class="b-statistic__item">
+                <label class="b-statistic__label">Кол-во статей:</label>
+                <div id="user-posts-${index}" class="b-statistic__text" title="Количество написанных пользователем ${configUser} статей."></div>
+              </div>
+              <div class="b-statistic__item">
+                <label class="b-statistic__label">Кол-во подписок:</label>
+                <div id="user-subscribes-${index}" class="b-statistic__text" title="Количество блогов, на которые пользователь ${configUser} подписан."></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="b-line">
+        <div class="b-block">
+          <div class="b-info">
+            <label class="b-label">Кураторы: <div id="user-status-icon-${index}" class="b-user-status-icon b-user-status-icon--curators"></div></label>
+            <div id="curators-${index}" type="text" class="b-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="b-line">
+        <div class="b-block">
+          <div class="b-info">
+            <label class="b-label">Голос отдан вслед за:</label>
+            <div id="votes-content-${index}" class="b-content">
+              <span id="before-text-${index}">пока пусто...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+
+<script id="tabs-item" type="text/x-jquery-tmpl">
+  <li class="b-tabs__item">
+       <a href="#${configUser}" class="b-tabs__link"><img src="img/user_icon.png" class="b-tabs__user_icon b-tabs__user_icon--${configUser}" /> ${configUser}</a>
+  </li>
+</script>
+
+<script id="curators-item" type="text/x-jquery-tmpl">
+  {%each(i) curators%}
+    <span class="b-curator js-curator"><a class="b-curator__link" target="_blank" href="https://golos.io/@${curators[i]}"> ${curators[i]} </a></span>
+  {%/each%}
+</script>
+
+<script id="vote-item" type="text/x-jquery-tmpl">
+  <div class="b-vote">
+    <div class="b-vote__curator">Куратором:  ${ voter } </div>
+    <div class="b-vote__url">
+      ${ title ? 'Статья' : 'Коммментарий' }: <a href="https://golos.io${ url }" target="_blank"> ${ title || 'Ссылка на комментарий' } </a>
+    </div>
+  </div>
+</script>
+
+<script id="menu-config" type="text/x-jquery-tmpl">
+  <form id="config-form-${index}" class="b-config__form" action="#" autocomplete="off">
+    <ul class="b-config__list" data-index="${index}" data-user="${configUser}">
+      <li class="b-config__item b-config__item--main">
+        <div class="b-config__block">
+          <label class="b-config__label"><span class='b-question' title="Введите имя действующего на Голосе пользователя"></span>Пользователь ${index + 1}: <div class="b-delete" data-index="${index}" data-user="${configUser}" title="Удалить пользователя."></div></label>
+          <div class="b-config__text">
+            <input name="config_user" type="text" id="config-user-${index}" class="b-config-input b-config-input-userName" data-name='config_user' data-index="${index}" value="${configUser}" data-previous-value="${configUser}" required data-parsley-required-message="Поле обязательно для заполнения" />
+          </div>
+        </div>
+      </li>
+      <li class="b-config__item ${configWif ? '' : 'b-config__item--disabled'}">
+        <div class="b-config__block">
+          <label class="b-config__label"><span class='b-question' title="{%if !configUser %} Поле станет активным после ввода имени пользователя. {%else%} Введите приватный ключ, который может быть найден в Личном кабинете Голоса. Вкладка 'Кошелёк' -> 'Разрешения' -> 'Показать приватный ключ'. Не путайте с Активным ключом! Постинг ключь начинается с цифры 5 и используется для постинга и голосования.  {%/if%}" ></span>Постинг key: {%if configWif%}<div class="b-icon b-icon--eye js-show-wif" data-input-index="wif${index}" title="Показать постинг key."></div>{%/if%}</label>
+          <div class="b-config__text">
+            <input name="config_wif" type="text" id="config-wif-${index}" value="${configHideWif}" data-previous-value="${configWif}" class="b-config-input" data-name='config_wif' data-index="wif${index}" data-user="${configUser}" data-show-content="${configWif}" data-hide-content="${configHideWif}" ${configWif ? '' : 'disabled'} required data-parsley-required-message="Поле обязательно для заполнения" data-parsley-pattern="^5(\d|\w)+" data-parsley-pattern-message="Ключ должен начинаться с цифры 5"/>
+          </div>
+        </div>
+      </li>
+      <li class="b-config__item ${configVotePower ? '' : 'b-config__item--disabled'}">
+        <div class="b-config__block">
+          <label class="b-config__label"><span class='b-question' title="{%if !configUser %} Поле станет активным после ввода имени пользователя. {%else%} Введите силу, с которой хотели бы голосовать. Этот параметр цифра в промежутке от 1 до 100.  {%/if%}"></span>Сила голоса:</label>
+          <div class="b-config__text">
+            <input name="config_vote_power" type="text" id="config-vote-power-${index}" class="b-config-input" data-name='config_vp' data-index="${index}" data-user="${configUser}" value="${configVotePower}" data-previous-value="${configVotePower}"  ${configVotePower ? '' : 'disabled'} required data-parsley-required-message="Поле обязательно для заполнения" data-parsley-min="1" data-parsley-max="100" data-parsley-min-message="Минимально допустимое число 1" data-parsley-max-message="Максимально допустимое число 100" data-parsley-number="true" data-parsley-number-message="Допускаются только числа" />
+          </div>
+        </div>
+      </li>
+      <li class="b-config__item ${configCurators ? '' : 'b-config__item--disabled'}">
+        <div class="b-config__block">
+          <label class="b-config__label"><span class='b-question' title="{%if !configUser %} Поле станет активным после ввода имени пользователя. {%else%} Введите имена кураторов, вслед за которыми хотите голосвать. Именя должны быть разделены запятой. {%/if%}"></span>Кураторы:</label>
+          <div class="b-config__text">
+            <input name="config_curators" type="text" id="config-curators-${index}" class="b-config-input" data-name='config_cu' data-index="${index}" data-user="${configUser}" value="${configCurators}" data-previous-value="${configCurators}"  ${configCurators ? '' : 'disabled'} required data-parsley-required-message="Поле обязательно для заполнения" data-parsley-pattern="^([a-zA-Z]{1,},\s{1})*[a-zA-Z]{1,}$" data-parsley-pattern-message="Введите имена кураторов разделенных ', '. Запятой и пробела в конце быть не должно. Пример: xxxx, xxxx, xxxx" />
+          </div>
+        </div>
+      </li>
+      {%if !configUser %}
+        <li class="b-config__item b-config__item--main b-config__item--submit">
+            <div class="b-config__block">
+              <input type="submit" class="b-config__submit" index="${index}" value="добавить"/>
+            </div>
+        </li>
+      {%/if%}
+    </ul>
+  </form>
+</script>
+
+<!-- end templates -->
+<script type="text/javascript" src="js/bot.js"></script>
+<script type="text/javascript" src="js/events.js"></script>
+</body>
+</html>
