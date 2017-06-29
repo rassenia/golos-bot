@@ -1,10 +1,10 @@
 /**
  *
  *
- * @author AUTHOR <AUTHOR@rec.expert>
+ * @author AUTHOR <webentry>
  * @package
- * @link http://rec.expert/
- * @copyright 2015 REC
+ * @link http://webentry.ru
+ * @copyright 2017 Webentry
  */
     
 var vars = {};
